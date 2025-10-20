@@ -1,0 +1,12 @@
+.laptopCard .textPart {
+    transition: transform 0.3s ease-out;
+  }
+.laptopCard:hover .textPart{
+    transform: translateY(-1rem);
+
+}
+
+.laptopCard:hover{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+

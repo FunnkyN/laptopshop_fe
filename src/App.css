@@ -1,0 +1,36 @@
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+    border-color: rgba(255, 255, 255, 0.23) !important;
+}
+
+.ql-snow .ql-stroke {
+    stroke: #e0e0e0 !important;
+}
+
+.ql-snow .ql-fill {
+    fill: #e0e0e0 !important;
+}
+
+.ql-snow .ql-picker {
+    color: #e0e0e0 !important;
+}
+
+.ql-editor {
+    color: #ffffff !important;
+    min-height: 200px;
+}
+
+.ql-editor.ql-blank::before {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-style: italic;
+}
+
+.ql-snow .ql-picker-label:hover,
+.ql-snow .ql-picker-item:hover {
+    color: #9155FD !important;
+}
+.ql-snow .ql-picker-label:hover .ql-stroke,
+.ql-snow .ql-picker-item:hover .ql-stroke {
+    stroke: #9155FD !important;
+}

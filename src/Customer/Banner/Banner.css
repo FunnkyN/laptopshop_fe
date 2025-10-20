@@ -1,0 +1,76 @@
+
+.center-banner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.center-banner {
+  position: relative;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.close-button:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.banner-content {
+  margin-top: 10px;
+}
+
+.banner-content h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.banner-content p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.action-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #45a049;
+}
+
