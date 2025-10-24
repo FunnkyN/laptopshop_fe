@@ -43,9 +43,7 @@ const Dashboard = () => {
                             <WeeklyOverview/>
                         </Grid>
                         <Grid item xs={12} md={8}>
-                            <YearOverview/>
-                        </Grid>
-    return (
+                      
         <div className="adminContainer ">
             <ThemeProvider theme={customTheme}>
                     </Grid>
