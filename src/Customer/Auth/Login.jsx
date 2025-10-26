@@ -35,13 +35,7 @@ export default function LoginForm({ handleNext }) {
         }
     }, [auth.user, auth.error]);
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        
-        if (!recaptchaToken) {
-            alert("Vui lòng xác nhận bạn không phải là người máy!");
-            return;
-        }
+   
 
         const data = new FormData(event.currentTarget);
 
@@ -74,13 +68,7 @@ export default function LoginForm({ handleNext }) {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            required
-                            id="password"
-                            name="password"
-                            label="Password"
-                            fullWidth
-                            autoComplete="given-name"
-                            type="password"
+                           assword"
                         />
                     </Grid>
 
