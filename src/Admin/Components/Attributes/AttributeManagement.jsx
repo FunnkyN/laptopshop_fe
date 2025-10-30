@@ -30,16 +30,6 @@ const AttributeManagement = ({ title, endpoint, fieldName = "name" }) => {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 1. Lấy danh sách
-  const fetchData = async () => {
-    try {
-      const res = await api.get(`/${endpoint}`);
-      setData(res.data);
-    } catch (error) {
-      console.error("Lỗi khi tải dữ liệu:", error);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, [endpoint]);
