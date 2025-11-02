@@ -23,7 +23,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import api from "../../../Config/api";
 
-
+const AttributeManagement = ({ title, endpoint, fieldName = "name" }) => {
+  const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [currentId, setCurrentId] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // 1. Lấy danh sách
   const fetchData = async () => {

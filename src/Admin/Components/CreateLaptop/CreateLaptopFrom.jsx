@@ -64,7 +64,16 @@ function validateObject(obj) {
   }
   return errors.length > 0 ? `Các trường: ${errors.join(", ")} không được để trống` : "done";
 }
-
+  const getURLs = async () => {
+    try {
+        const res = await api.get("api/banner/slideimage");
+        if (res.data) {
+          setUrls(res.data);
+        }
+    } catch (error) {
+        console.error("Failed to fetch banner images for admin view:", error);
+    }
+  };
 const CreateLaptopForm = () => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.laptop);
