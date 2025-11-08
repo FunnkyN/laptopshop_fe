@@ -16,17 +16,7 @@ const BannerManagement = () => {
         console.error("Failed to fetch banner images for admin view:", error);
     }
   };
- const [brands, setBrands] = useState([]);
-  const [colors, setColors] = useState([]);
-  const [gpus, setGpus] = useState([]);
-  const [cpus, setCpus] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [availableColors, setAvailableColors] = useState([]);
-  const [osVersions, setOsVersions] = useState([]);
-  const [files, setFiles] = useState([]);
-  useEffect(()=>{
-    getURLs();
-  },[])
+
 
   const handleDeleteBanner = async (url) => {
     const confirmDelete = window.confirm("Bạn có chắc muốn xoá banner này?");
