@@ -71,19 +71,4 @@ function App() {
       {/* 2. ĐẶT COMPONENT VÀO ĐÂY */}
       <ScrollToTop /> 
       
-      <Routes>
-        <Route path="/*" element={<CustomerRoutes />} />
-        {auth.user?.role === "ADMIN" && <Route path="/admin/*" element={<AdminPanel />} />}
-      </Routes>
-
-      {!isAdminRoute && (
-        <>
-          <ChatbotButton onClick={handleToggleChatbot} />
-          <ChatbotWindow open={isChatbotOpen} handleClose={handleCloseChatbot} />
-        </>
-      )}
-    </div>
-  );
-}
-
-export default A
+     
