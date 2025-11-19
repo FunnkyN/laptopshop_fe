@@ -1,4 +1,19 @@
 .createLaptopContainer{
     padding: 0rem 5rem;
 }
+    setIsChatOpen(false);
 
+        dispatch(setActiveConversation(null));
+    };
+
+    const handleOpenChat = async (customer) => {
+        if (!customer) return;
+        try {
+
+            const { data: conversation } = await api.get(`/api/conversations/with/${customer.id}`);
+
+            dispatch(setActiveConversation(conversation));
+
+            dispatch(getMessages(conversation.id));
+
+            setIsChatOpe
