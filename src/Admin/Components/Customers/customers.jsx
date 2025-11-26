@@ -23,12 +23,6 @@ const Customers = () => {
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
-    const handleCloseChat = () => {
-        setIsChatOpen(false);
-
-        dispatch(setActiveConversation(null));
-    };
-
     const handleOpenChat = async (customer) => {
         if (!customer) return;
         try {
