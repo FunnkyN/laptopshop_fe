@@ -19,6 +19,13 @@ export const setOrderData = (data) => ({
     type: SET_ORDER_DATA,
     payload: data,
 });
+GET_ORDER_HISTORY_REQUEST,
+  GET_ORDER_HISTORY_SUCCESS,
+  SET_ORDER_DATA,
+
+} from "./ActionType";
+import api, { API_BASE_URL } from "../../../Config/api";
+import { getUser } from "../../Auth/Action";
 
 export const setSelectedCartItems = (cartItems) => ({
   type: SET_SELECTED_CART_ITEMS,
@@ -30,9 +37,7 @@ export const createOrder = (orderData) => async (dispatch) => {
     dispatch({ type: CREATE_ORDER_REQUEST });
 
     const payload = {
-      shippingAddress: orderData.shippingAddress,
-      paymentMethod: orderData.paymentMethod,
-      cartItems: orderData.cartItems
+      shiderData.cartItems
     };
 
     const { data } = await api.post(`${API_BASE_URL}/api/orders/`, payload);
@@ -48,6 +53,13 @@ export const createOrder = (orderData) => async (dispatch) => {
       type: CREATE_ORDER_SUCCESS,
       payload: data,
     });
+GET_ORDER_HISTORY_REQUEST,
+  GET_ORDER_HISTORY_SUCCESS,
+  SET_ORDER_DATA,
+
+} from "./ActionType";
+import api, { API_BASE_URL } from "../../../Config/api";
+import { getUser } from "../../Auth/Action";
 
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
@@ -60,7 +72,6 @@ export const createOrder = (orderData) => async (dispatch) => {
     if (error.response && error.response.data) {
         errorMessage = error.response.data.message || error.response.data.error || errorMessage;
     }
-    dispatch({
       type: CREATE_ORDER_FAILURE,
       payload: errorMessage
     });
