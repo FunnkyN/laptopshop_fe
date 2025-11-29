@@ -22,21 +22,6 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import SaveIcon from "@mui/icons-material/Save";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const modules = {
-    toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-        ],
-        ["link", "image"],
-        ["clean"],
-    ],
-};
-
 const formats = [
     "header",
     "bold", "italic", "underline", "strike", "blockquote",
