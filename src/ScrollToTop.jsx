@@ -6,11 +6,27 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Cuộn lên đầu trang (tọa độ 0,0) mỗi khi đường dẫn (pathname) thay đổi
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    mport { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-  return null;
-};
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    mport { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    mport { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    
 
 export default ScrollToTop;
