@@ -23,6 +23,7 @@ const Customers = () => {
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
+    
     const handleOpenChat = async (customer) => {
         if (!customer) return;
         try {
