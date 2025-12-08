@@ -15,24 +15,7 @@ import SalesOverTime from "../Tables/SalesOverTime";
 import RecentOrders from "../Tables/RecentOrders";
 import {BriefcaseVariantOutline, CurrencyUsd, HelpCircleOutline, Poll} from "mdi-material-ui";
 import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import { useEffect } from "react";
-import axios from "axios";
-import api from "../../Config/api";
-import AchivementYear from "../Tables/YearOverview";
-import YearOverview from "../Tables/YearOverview";
-import PieChart from "../Tables/PieChart";
 
-const darkTheme1 = createTheme({
-    palette: {
-        mode: 'dark',
-        primary: {
-            main: '#312d4b',
-        },
-        secondary: {
-            main: '#f48fb1',
-        },
-    },
 });
 
 const Dashboard = () => {
