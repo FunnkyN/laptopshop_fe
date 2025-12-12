@@ -15,17 +15,7 @@ const BlogDetail = () => {
   const { post } = useSelector(store => store);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  useEffect(() => {
-    if (blogId) {
-      dispatch(getPostById(blogId));
-    }
-    window.scrollTo(0, 0);
-  }, [blogId, dispatch]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
+  u
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -53,7 +43,25 @@ const BlogDetail = () => {
   const thumbnailUrl = currentPost.thumbnail
     ? (currentPost.thumbnail.startsWith('http') ? currentPost.thumbnail : `${API_BASE_URL}${currentPost.thumbnail}`)
     : "";
+seEffect(() => {
+    if (blogId) {
+      dispatch(getPostById(blogId));
+    }
+    window.scrollTo(0, 0);
+  }, [blogId, dispatch]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };seEffect(() => {
+    if (blogId) {
+      dispatch(getPostById(blogId));
+    }
+    window.scrollTo(0, 0);
+  }, [blogId, dispatch]);
+
+  useEffectlled(window.scrollY > 100);
+    };
   const formattedDate = currentPost.createdAt
     ? new Date(currentPost.createdAt).toLocaleDateString('vi-VN', {
         year: 'numeric',
