@@ -32,16 +32,6 @@ const PostTable = () => {
     dispatch(getAllPosts());
   }, [dispatch]);
 
-  const handleDeletePost = (postId) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) {
-      dispatch(deletePost(postId));
-    }
-  };
-
-  const handleCreatePost = () => {
-    navigate("/admin/posts/create");
-  };
-
   const handleUpdatePost = (postId) => {
     navigate(`/admin/posts/update/${postId}`);
   };
@@ -150,5 +140,4 @@ const PostTable = () => {
     </Box>
   );
 };
-
 export default PostTable;
