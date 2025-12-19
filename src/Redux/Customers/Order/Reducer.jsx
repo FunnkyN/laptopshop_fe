@@ -10,16 +10,6 @@ import {
     GET_ORDER_HISTORY_SUCCESS,
     GET_ORDER_HISTORY_FAILURE,
     SET_ORDER_DATA
-} from './ActionType.jsx';
-
-const initialState = {
-    orders: [],
-    selectedCartItems: [],
-    order: null,
-    error: null,
-    loading: false,
-    orderData: null,
-}
 
 export const orderReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -36,7 +26,17 @@ export const orderReducer = (state = initialState, action) => {
         case CREATE_ORDER_FAILURE:
             return { ...state, loading: false, error: action.payload };
 
-        case GET_ORDER_BY_ID_REQUEST:
+        case GET_ORDER_BY} from './ActionType.jsx';
+
+const initialState = {
+    orders: [],
+    selectedCartItems: [],
+    order: null,
+    error: null,
+    loading: false,
+    orderData: null,
+}
+_ID_REQUEST:
             return { ...state, loading: true, error: null };
         case GET_ORDER_BY_ID_SUCCESS:
             return { ...state, loading: false, order: action.payload, error: null };
@@ -53,4 +53,13 @@ export const orderReducer = (state = initialState, action) => {
         default:
             return state;
     }
-};
+};} from './ActionType.jsx';
+
+const initialState = {
+    orders: [],
+    selectedCartItems: [],
+    order: null,
+    error: null,
+    loading: false,
+    orderData: null,
+}
