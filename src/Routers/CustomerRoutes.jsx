@@ -47,23 +47,6 @@ const CustomerRoutes = () => {
 
         { path: "/*", element: <NotFound /> }
     ];
-
-    return (
-        <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
-            <ThemeProvider theme={customerTheme}>
-                {showNavigation && <Navigation/>}
-                <div className="min-h-screen" style={{flex: 1}}>
-                    <Routes>
-                        {routes.map(({path, element}, index) => (
-                            <Route key={index} path={path} element={element}/>
-                        ))}
-                    </Routes>
-                </div>
-                {showFooter && <Footer/>}
-            </ThemeProvider>
-        </div>
-    );
-    );
 };
 
 export default CustomerRoutes;
