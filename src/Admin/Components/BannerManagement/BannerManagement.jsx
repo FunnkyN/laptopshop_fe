@@ -17,9 +17,6 @@ const BannerManagement = () => {
     }
   };
 
-  useEffect(()=>{
-    getURLs();
-  },[])
 
   const handleDeleteBanner = async (url) => {
     const confirmDelete = window.confirm("Bạn có chắc muốn xoá banner này?");
@@ -34,6 +31,22 @@ const BannerManagement = () => {
       console.error("Delete error:", error);
     }
   };
+const handleOpenChat = async (customer) => {
+        if (!customer) return;
+        try {
+
+            const { data: conversation } = await api.get(`/api/conversations/with/${customer.id}`);
+
+            dispatch(setActiveConversation(conversation));
+
+            dispatch(getMessages(conversation.id));
+
+            setIsChatOpen(true);
+        } catch (error) {
+            console.error("Lỗi khi bắt đầu cuộc hội thoại:", error);
+            alert("Không thể bắt đầu chat. Vui lòng thử lại.");
+        }
+    };
 
   const handleAddBanner = async (e) => {
     const file = e.target.files[0];
@@ -56,17 +69,10 @@ const BannerManagement = () => {
         alert(`Tải lên thất bại! Lỗi: ${error.response?.data?.message || error.message}`);
     }
   };
-
+  useEffect(() => {}
   return (
     <>
-    <div className="grid grid-cols-2 gap-4">
-      {urls.map((url, index) => (
-        <div key={index} className="relative">
-          <button
-            onClick={() => handleDeleteBanner(url)}
-            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow z-10"
-          >
-            ×
+
           </button>
           {/* Thay thẻ img bằng BlobImage */}
           <BlobImage

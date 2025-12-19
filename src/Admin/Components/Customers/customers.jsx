@@ -23,11 +23,6 @@ const Customers = () => {
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
-    const handleCloseChat = () => {
-        setIsChatOpen(false);
-
-        dispatch(setActiveConversation(null));
-    };
 
     const handleOpenChat = async (customer) => {
         if (!customer) return;
@@ -46,11 +41,6 @@ const Customers = () => {
         }
     };
 
-    useEffect(() => {
-        console.log("customer table use effect")
-        dispatch(getAllCustomers(localStorage.getItem("jwt")))
-    }, [])
-    console.log("customer table ")
     return (
         <Card>
             {}
