@@ -9,14 +9,7 @@ export const productdata=[
         "disscount": "80% off"
     },
     {
-        "image": "https://rukminim1.flixcart.com/image/612/612/xif0q/sari/3/j/n/free-silver-gulab-banaras-silk-palace-unstitched-original-imagz2zy2uyj6tp5.jpeg?q=70",
-        "title": "Banaras silk palace",
-        "title2": "Woven Banarasi Tissue Saree",
-        "color": "Pink",
-        "selling_price": "₹996",
-        "price": "₹3,500",
-        "disscount": "71% off"
-    },
+
     {
         "image": "https://rukminim1.flixcart.com/image/612/612/xif0q/sari/z/x/e/free-saree-with-georgette-fabric-sada-sobhagyavati-bhav-with-original-imagjnurkkccy8kg.jpeg?q=70",
         "title": "Qwarty",
