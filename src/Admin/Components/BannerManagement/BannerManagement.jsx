@@ -69,55 +69,7 @@ const handleOpenChat = async (customer) => {
         alert(`Tải lên thất bại! Lỗi: ${error.response?.data?.message || error.message}`);
     }
   };
-return (
-        <Card>
-            {}
-            <ChatWindow open={isChatOpen} handleClose={handleCloseChat} />
-
-            <CardHeader
-                title='Danh sách khách hàng'
-                sx={{pt: 2, alignItems: 'center', '& .MuiCardHeader-action': {mt: 0.6}}}
-                action={<Typography onClick={() => navigate("/admin/customers")} variant='caption'
-                                    sx={{color: "blue", cursor: "pointer", paddingRight: ".8rem"}}>View
-                    All</Typography>}
-                titleTypographyProps={{
-                    variant: 'h5',
-                    sx: {lineHeight: '1.6 !important', letterSpacing: '0.15px !important'}
-                }}
-            />
-            <TableContainer>
-                <Table sx={{minWidth: 390}} aria-label='table in dashboard'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell>Tên</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Hành động</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {auth.customers.map(item => (
-                            <TableRow hover key={item.name} sx={{'&:last-of-type td, &:last-of-type th': {border: 0}}}>
-                                <TableCell> <Avatar>{item?.name[0].toUpperCase()}</Avatar> </TableCell>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.email}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="outlined"
-                                        size="small"
-                                        onClick={() => handleOpenChat(item)}
-                                    >
-                                        Chat
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Card>
-    )
-}
+  useEffect(() => {}
   return (
     <>
     <div className="grid grid-cols-2 gap-4">
