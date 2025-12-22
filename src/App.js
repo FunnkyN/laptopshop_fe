@@ -29,25 +29,17 @@ function App() {
     }
   }, [jwt, dispatch]);
 
-  useEffect(() => {
-    if (auth.user && jwt) {
-      console.log("App: Bắt đầu kết nối WebSocket cho user:", auth.user.email);
-
-      const onMessageReceived = (message) => {
-        dispatch(receiveMessage(message));
-      };
-
-      const onConnected = () => {
+ () => {
         console.log("App: Đã kết nối, đang đăng ký nhận tin nhắn...");
         stompService.subscribe(
           '/user/queue/messages',
           onMessageReceived
         );
-      };
+      };  const { auth } = useSelector(store => store);
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const [isChatbot
 
-      const onError = (error) => {
-        console.error('App: Lỗi kết nối STOMP:', error);
-      };
 
       stompService.connect(jwt, onConnected, onError);
     }
@@ -61,7 +53,10 @@ function App() {
   const handleToggleChatbot = () => {
     setIsChatbotOpen(!isChatbotOpen);
   };
-
+  const { auth } = useSelector(store => store);
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const [isChatbot
   const handleCloseChatbot = () => {
     setIsChatbotOpen(false);
   }
@@ -72,3 +67,15 @@ function App() {
       <ScrollToTop /> 
       
      
+
+      {!isAdminRoute && (
+        <>
+          <ChatbotButton onClick={handleToggleChatbot} />
+          <ChatbotWindow open={isChatbotOpen} handleClose={handleCloseChatbot} />
+        </>
+      )}
+    </div>
+  );
+}
+
+export default App;
