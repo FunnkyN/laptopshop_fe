@@ -30,6 +30,10 @@ export const createReview = (resData) => {
         }
     };
 };
+export const createReview = (resData) => {
+    console.log("create review req ", resData)
+    return async (dispatch) => {
+        try {
 
 export const getAllReviews = (laptopId) => {
     return async (dispatch) => {
@@ -43,7 +47,10 @@ export const getAllReviews = (laptopId) => {
 
             dispatch({
                 type: GET_ALL_REVIEWS_SUCCESS,
-                payload: data
+               export const createReview = (resData) => {
+    console.log("create review req ", resData)
+    return async (dispatch) => {
+        try { payload: data
             });
             console.log("all review ", response.data)
         } catch (error) {
@@ -55,9 +62,7 @@ export const getAllReviews = (laptopId) => {
     };
 };
 
-export const createRating = (resData) => {
-    return async (dispatch) => {
-        try {
+exp
             const response = await api.post('/api/ratings/create',
                 resData);
 
