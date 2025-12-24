@@ -5,23 +5,7 @@ import {
     GET_CONVERSATIONS_SUCCESS,
     GET_CONVERSATIONS_FAILURE,
     GET_MESSAGES_REQUEST,
-    GET_MESSAGES_SUCCESS,
-    GET_MESSAGES_FAILURE,
-    RECEIVE_MESSAGE,
-    SET_ACTIVE_CONVERSATION,
-    RESET_UNREAD_COUNT
-} from './ActionType';
-
-export const getConversations = () => async (dispatch) => {
-    dispatch({ type: GET_CONVERSATIONS_REQUEST });
-    try {
-        const { data } = await api.get('/api/conversations/');
-        dispatch({ type: GET_CONVERSATIONS_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: GET_CONVERSATIONS_FAILURE, payload: error.message });
-    }
-};
-
+   
 export const getMessages = (conversationId) => async (dispatch) => {
     dispatch({ type: GET_MESSAGES_REQUEST });
     try {
@@ -49,7 +33,56 @@ export const setActiveConversation = (conversation) => ({
     type: SET_ACTIVE_CONVERSATION,
     payload: conversation,
 });
+ GET_MESSAGES_SUCCESS,
+    GET_MESSAGES_FAILURE,
+    RECEIVE_MESSAGE,
+    SET_ACTIVE_CONVERSATION,
+    RESET_UNREAD_COUNT
+} from './ActionType';
+
+export const getConversations = () => async (dispatch) => {
+    dispatch({ type: GET_CONVERSATIONS_REQUEST });
+    try {
+        const { data } = await api.get('/api/conversations/');
+        dispatch({ type: GET_CONVERSATIONS_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_CONVERSATIONS_FAILURE, payload: error.message });
+    }
+};
+
 
 export const resetUnreadCount = () => ({
     type: RESET_UNREAD_COUNT,
-});
+}); GET_MESSAGES_SUCCESS,
+    GET_MESSAGES_FAILURE,
+    RECEIVE_MESSAGE,
+    SET_ACTIVE_CONVERSATION,
+    RESET_UNREAD_COUNT
+} from './ActionType';
+
+export const getConversations = () => async (dispatch) => {
+    dispatch({ type: GET_CONVERSATIONS_REQUEST });
+    try {
+        const { data } = await api.get('/api/conversations/');
+        dispatch({ type: GET_CONVERSATIONS_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_CONVERSATIONS_FAILURE, payload: error.message });
+    }
+};
+
+ GET_MESSAGES_SUCCESS,
+    GET_MESSAGES_FAILURE,
+    RECEIVE_MESSAGE,
+    SET_ACTIVE_CONVERSATION,
+    RESET_UNREAD_COUNT
+} from './ActionType';
+
+export const getConversations = () => async (dispatch) => {
+    dispatch({ type: GET_CONVERSATIONS_REQUEST });
+    try {
+        const { data } = await api.get('/api/conversations/');
+        dispatch({ type: GET_CONVERSATIONS_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_CONVERSATIONS_FAILURE, payload: error.message });
+    }
+};
