@@ -79,13 +79,7 @@ exp
     };
 };
 
-export const getAllRatings = (laptopId) => {
-    return async (dispatch) => {
-        try {
-            const response = await api.get(`/api/ratings/laptop/${laptopId}`, {});
-            dispatch({
-                type: GET_ALL_RATINGS_SUCCESS,
-                payload: response.data
+expo: response.data
             });
             console.log("all rating ", response.data)
         } catch (error) {
