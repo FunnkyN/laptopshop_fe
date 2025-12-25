@@ -18,13 +18,7 @@ import {
 
 const initialState = {
     posts: [],
-    post: null,
-    loading: false,
-    error: null,
-};
-
-const postReducer = (state = initialState, action) => {
-    switch (action.type) {
+   ) {
         case GET_ALL_POSTS_REQUEST:
         case GET_POST_BY_ID_REQUEST:
         case CREATE_POST_REQUEST:
@@ -49,12 +43,7 @@ const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                post: action.payload,
-                posts: state.posts.map((item) =>
-                    item.id === action.payload.id ? action.payload : item
-                ),
-            };
-
+           
         case DELETE_POST_SUCCESS:
             return {
                 ...state,
@@ -75,3 +64,12 @@ const postReducer = (state = initialState, action) => {
 };
 
 export default postReducer;
+        case GET_ALL_POSTS_FAILURE:
+        case GET_POST_BY_ID_FAILURE:
+        case CREATE_POST_FAILURE
+        case GET_ALL_POSTS_FAILURE:
+        case GET_POST_BY_ID_FAILURE:
+        case CREATE_POST_FAILURE
+        case GET_ALL_POSTS_FAILURE:
+        case GET_POST_BY_ID_FAILURE:
+        case CREATE_POST_FAILURE
