@@ -17,12 +17,7 @@ import {
     UPDATE_POST_SUCCESS
 } from "./ActionType";
 
-export const getAllPosts = () => async (dispatch) => {
-    dispatch({ type: GET_ALL_POSTS_REQUEST });
-    try {
-        const { data } = await api.get('/api/posts');
-        dispatch({ type: GET_ALL_POSTS_SUCCESS, payload: data });
-    } catch (error) {
+exporr) {
         dispatch({ type: GET_ALL_POSTS_FAILURE, payload: error.message });
     }
 };
@@ -41,11 +36,7 @@ export const getLatestPosts = (limit = 4) => async (dispatch) => {
 export const getPostById = (postId) => async (dispatch) => {
     dispatch({ type: GET_POST_BY_ID_REQUEST });
     try {
-        const { data } = await api.get(`/api/posts/${postId}`);
-        dispatch({ type: GET_POST_BY_ID_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: GET_POST_BY_ID_FAILURE, payload: error.message });
-    }
+        c
 };
 
 export const createPost = (postData) => async (dispatch) => {
@@ -66,7 +57,11 @@ export const createPost = (postData) => async (dispatch) => {
                 "Content-Type": "multipart/form-data"
             }
         });
-
+onst { data } = await api.get(`/api/posts/${postId}`);
+        dispatch({ type: GET_POST_BY_ID_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_POST_BY_ID_FAILURE, payload: error.message });
+    }
         dispatch({ type: CREATE_POST_SUCCESS, payload: data });
         return data;
     } catch (error) {
@@ -87,10 +82,7 @@ export const updatePost = (postData) => async (dispatch) => {
         }
 
         const { data } = await api.put(`/api/admin/posts/${postData.id}`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+         
 
         dispatch({ type: UPDATE_POST_SUCCESS, payload: data });
         return data;
@@ -101,10 +93,13 @@ export const updatePost = (postData) => async (dispatch) => {
 
 export const deletePost = (postId) => async (dispatch) => {
     dispatch({ type: DELETE_POST_REQUEST });
-    try {
-        await api.delete(`/api/admin/posts/${postId}`);
-        dispatch({ type: DELETE_POST_SUCCESS, payload: postId });
+    try {onst { data } = await api.get(`/api/posts/${postId}`);
+        dispatch({ type: GET_POST_BY_ID_SUCCESS, payload: data });
     } catch (error) {
+        dispatch({ type: GET_POST_BY_ID_FAILURE, payload: error.message });
+    }
+        await api.delete(`/api/admin/posts/${postId}`);
+        dispatch({
         dispatch({ type: DELETE_POST_FAILURE, payload: error.message });
     }
 };
