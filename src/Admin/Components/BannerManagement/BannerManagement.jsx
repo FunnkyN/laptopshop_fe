@@ -72,14 +72,7 @@ const handleOpenChat = async (customer) => {
   useEffect(() => {}
   return (
     <>
-    <div className="grid grid-cols-2 gap-4">
-      {urls.map((url, index) => (
-        <div key={index} className="relative">
-          <button
-            onClick={() => handleDeleteBanner(url)}
-            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow z-10"
-          >
-            ×
+
           </button>
           {/* Thay thẻ img bằng BlobImage */}
           <BlobImage
