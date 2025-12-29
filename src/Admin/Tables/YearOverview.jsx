@@ -82,35 +82,5 @@ const YearOverview = () => {
       }
     }
   }
-
-  return (
-    <Card className='h-full'>
-      <CardHeader
-        title='Doanh thu các năm'
-        titleTypographyProps={{
-          sx: { lineHeight: '0rem !important', letterSpacing: '0.15px !important' }
-        }}
-        action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-            <DotsVertical />
-          </IconButton>
-        }
-      />
-      <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
-        <ReactApexCharts  type='bar' height={201} options={options} series={[{ data: reportYearly }]} />
-        <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-          {
-
-}
-          {}
-        </Box>
-        {
-
-}
-      </CardContent>
-    </Card>
-  )
-}
-
 export default YearOverview
 
