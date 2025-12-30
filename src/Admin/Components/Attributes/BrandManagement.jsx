@@ -11,5 +11,9 @@ const BrandManagement = () => {
     />
   );
 };
-
+  const [formData, setFormData] = useState({
+    id: null,
+    techName: "",
+    brandId: ""
+  });
 export default BrandManagement;
