@@ -26,12 +26,10 @@ const CustomerRoutes = () => {
 
     const showNavigation = true;
     const showFooter = true;
+    );
 
     const routes = [
-        { path: "/login", element: <Homepage /> },
-        { path: "/signup", element: <Homepage /> },
-        { path: "/", element: <Homepage /> },
-        { path: "/laptops/search", element: <SearchLaptop /> },
+       s/search", element: <SearchLaptop /> },
         { path: "/home", element: <Homepage /> },
         { path: "/about", element: <About /> },
         { path: "/privacy-policy", element: <PrivacyPolicy /> },
@@ -46,9 +44,6 @@ const CustomerRoutes = () => {
         { path: "/checkout", element: <Checkout /> },
 
         { path: "/payment/success", element: <PaymentSuccess /> },
-
-        { path: "/blogs", element: <BlogPage /> },
-        { path: "/blogs/:blogId", element: <BlogDetail /> },
 
         { path: "/*", element: <NotFound /> }
     ];
@@ -67,6 +62,7 @@ const CustomerRoutes = () => {
                 {showFooter && <Footer/>}
             </ThemeProvider>
         </div>
+    );
     );
 };
 
