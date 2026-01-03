@@ -21,38 +21,9 @@ const QuickCpuManager = ({ onClose, onDataChange }) => {
   const [newTechData, setNewTechData] = useState({ brandId: "", techName: "" });
 
   // State cho form CPU
-  const initialFormState = {
-    model: "",
-    technologyId: "",
-    speed: 0,
-    maxSpeed: 0,
-    core: 0,
-    thread: 0,
-    cache: 0,
-    tops: 0
-  };
+  
   const [formData, setFormData] = useState(initialFormState);
   const [editId, setEditId] = useState(null);
-
-  // Load dữ liệu
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      // [NEW] Load thêm /brands để phục vụ việc tạo Tech mới
-      const [cpusRes, techsRes, brandsRes] = await Promise.all([
-        api.get("/cpus"),
-        api.get("/api/cputechs"),
-        api.get("/brands")
-      ]);
-      setData(cpusRes.data);
-      setTechs(techsRes.data);
-      setBrands(brandsRes.data);
-    } catch (error) {
-      console.error("Lỗi tải dữ liệu CPU:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     fetchData();

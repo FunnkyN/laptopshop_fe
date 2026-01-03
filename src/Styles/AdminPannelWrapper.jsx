@@ -58,47 +58,5 @@ const AdminPannelWrapper = styled('div')(({ theme }) => ({
     },
     '& .apexcharts-text, & .apexcharts-tooltip-text, & .apexcharts-datalabel-label, & .apexcharts-datalabel': {
       filter: 'none',
-      fontWeight: 400,
-      fill: theme.palette.text.primary,
-      fontFamily: `${theme.typography.fontFamily} !important`
-    },
-    '& .apexcharts-pie-label': {
-      filter: 'none',
-      fill: theme.palette.common.white
-    },
-    '& .apexcharts-pie': {
-      '& .apexcharts-datalabel-label, .apexcharts-datalabel-value': {
-        fontSize: '1.5rem'
-      }
-    },
-    '& .apexcharts-marker': {
-      boxShadow: 'none'
-    },
-    '& .apexcharts-legend-series': {
-      margin: `${theme.spacing(0.75, 2)} !important`,
-      '& .apexcharts-legend-text': {
-        marginLeft: theme.spacing(0.75),
-        color: `${theme.palette.text.primary} !important`
-      }
-    },
-    '& .apexcharts-xcrosshairs, & .apexcharts-ycrosshairs, & .apexcharts-gridline': {
-      stroke: theme.palette.divider
-    },
-    '& .apexcharts-heatmap-rect': {
-      stroke: theme.palette.mode === 'light' ? theme.palette.background.paper : theme.palette.background.default
-    },
-    '& .apexcharts-radialbar > g > g:first-of-type .apexcharts-radialbar-area': {
-      stroke: theme.palette.background.default
-    },
-    '& .apexcharts-radar-series polygon': {
-      stroke: theme.palette.divider,
-      fill: theme.palette.background.paper
-    },
-    '& .apexcharts-radar-series line': {
-      stroke: theme.palette.divider
-    }
-  }
-}))
-
 export default AdminPannelWrapper
 

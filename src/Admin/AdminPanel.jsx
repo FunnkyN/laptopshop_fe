@@ -54,12 +54,6 @@ export default function AdminPanel() {
 
     const drawer = (
         <Box
-            sx={{
-                overflow: "auto",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-            }}
         >
             {isLargeScreen && <Toolbar/>}
             <List>

@@ -16,33 +16,9 @@ const QuickAttributeManager = ({ endpoint, fieldName = "name", onClose, onDataCh
   const [editId, setEditId] = useState(null);
   const [editValue, setEditValue] = useState("");
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get(`/${endpoint}`);
-      setData(res.data);
-    } catch (error) {
-      console.error("Lỗi tải dữ liệu:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, [endpoint]);
-
-  const handleAdd = async () => {
-    if (!newItemValue.trim()) return;
-    try {
-      await api.post(`/${endpoint}/api/admin`, { [fieldName]: newItemValue });
-      setNewItemValue("");
-      await fetchData();
-      if(onDataChange) onDataChange();
-    } catch (error) {
-      alert(error.response?.data?.message || "Lỗi thêm mới");
-    }
-  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Xóa mục này?")) return;

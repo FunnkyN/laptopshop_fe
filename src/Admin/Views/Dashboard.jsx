@@ -31,9 +31,6 @@ const Dashboard = () => {
         getData()
     },[])
 
-    return (
-        <div className="adminContainer ">
-            <ThemeProvider theme={customTheme}>
                 <AdminPannel>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={7}>
@@ -46,8 +43,9 @@ const Dashboard = () => {
                             <WeeklyOverview/>
                         </Grid>
                         <Grid item xs={12} md={8}>
-                            <YearOverview/>
-                        </Grid>
+                      
+        <div className="adminContainer ">
+            <ThemeProvider theme={customTheme}>
                     </Grid>
                 </AdminPannel>
             </ThemeProvider>

@@ -39,38 +39,9 @@ const CpuTechManagement = () => {
     brandId: ""
   });
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [techRes, brandRes] = await Promise.all([
-        api.get("/api/cputechs"),
-        api.get("/brands")
-      ]);
-      setData(techRes.data);
-      setBrands(brandRes.data);
-    } catch (error) {
-      console.error("Lỗi tải dữ liệu:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleOpen = (item = null) => {
-    if (item) {
-      setFormData({
-        id: item.id,
-        techName: item.techName,
-        brandId: item.brandId
-      });
-    } else {
-      setFormData({ id: null, techName: "", brandId: "" });
-    }
-    setOpen(true);
-  };
 
   const handleClose = () => {
     setOpen(false);

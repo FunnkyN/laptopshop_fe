@@ -18,21 +18,34 @@ import {
   CardHeader,
   CardContent,
   Divider,
-  Box
+  Box,
+  InputAdornment,
+  Paper,
+  FormHelperText,
+  Chip
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+
+// Icons
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import SettingsIcon from "@mui/icons-material/Settings";
-// [EDIT] Thay axios bằng api instance
-import api from "../../../Config/api"; 
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import SaveIcon from "@mui/icons-material/Save";
+import MemoryIcon from '@mui/icons-material/Memory';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
+import LaptopMacIcon from '@mui/icons-material/LaptopMac';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+
+import api from "../../../Config/api";
 import { useDispatch, useSelector } from "react-redux";
 import { createLaptop, uploadFiles } from "../../../Redux/Admin/Laptop/Action";
 import QuickAttributeManager from "../Attributes/QuickAttributeManager";
-
 import QuickCpuManager from "../Attributes/QuickCpuManager";
 import QuickGpuManager from "../Attributes/QuickGpuManager";
 
+// Hàm validate (giữ nguyên logic)
 function validateObject(obj) {
   const errors = [];
   const isInvalid = (value) => value === null || value === "";
@@ -62,42 +75,34 @@ function validateObject(obj) {
           errors.push(key);
       }
   }
-  return errors.length > 0 ? `Các trường: ${errors.join(", ")} không được để trống` : "done";
+  return errors.length > 0 ? `Vui lòng nhập đầy đủ: ${errors.join(", ")}` : "done";
 }
-  const getURLs = async () => {
-    try {
-        const res = await api.get("api/banner/slideimage");
-        if (res.data) {
-          setUrls(res.data);
-        }
-    } catch (error) {
-        console.error("Failed to fetch banner images for admin view:", error);
-    }
-  };
+
 const CreateLaptopForm = () => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.laptop);
 
+  // --- STATE ---
   const [laptopData, setLaptopData] = useState({
-    brandId: null,
+    brandId: "",
     model: "",
     cpu: "",
     gpus: [],
-    ramMemory: 0,
+    ramMemory: "",
     ramDetail: "",
-    diskCapacity: 0,
+    diskCapacity: "",
     diskDetail: "",
-    screenSize: 0,
+    screenSize: "",
     screenDetail: "",
-    osVersionId: null,
+    osVersionId: "",
     keyboardType: "",
     batteryCharger: "",
     design: "",
-    laptopColors: [{ colorId: null, quantity: 0 }],
+    laptopColors: [{ colorId: "", quantity: "" }],
     categories: [],
     origin: "",
-    warranty: 0,
-    price: 0,
+    warranty: "",
+    price: "",
     discountPercent: 0
   });
 
@@ -110,20 +115,19 @@ const CreateLaptopForm = () => {
   const [osVersions, setOsVersions] = useState([]);
   const [files, setFiles] = useState([]);
 
+  // State quản lý Dialog Quick Manager
   const [managerConfig, setManagerConfig] = useState({
     open: false,
     title: "",
     endpoint: "",
     fieldName: "name"
   });
-
   const [openCpuManager, setOpenCpuManager] = useState(false);
   const [openGpuManager, setOpenGpuManager] = useState(false);
 
-  // [EDIT] Hàm fetchAllData đã được sửa lại
+  // --- FETCH DATA ---
   const fetchAllData = async () => {
     try {
-      // Gọi qua api instance để tự động xử lý Ngrok và BaseURL
       const [brandsRes, colorsRes, gpusRes, cpusRes, categoriesRes, osVersionsRes] = await Promise.all([
         api.get(`/brands`),
         api.get(`/colors`),
@@ -134,6 +138,7 @@ const CreateLaptopForm = () => {
       ]);
       setBrands(brandsRes.data);
       setColors(colorsRes.data);
+      // Logic màu khả dụng ban đầu
       if(laptopData.laptopColors.length === 1 && !laptopData.laptopColors[0].colorId) {
           setAvailableColors(colorsRes.data);
       }
@@ -150,6 +155,7 @@ const CreateLaptopForm = () => {
     fetchAllData();
   }, []);
 
+  // --- HANDLERS ---
   const openManager = (title, endpoint, fieldName = "name") => {
     setManagerConfig({ open: true, title, endpoint, fieldName });
   };
@@ -168,12 +174,13 @@ const CreateLaptopForm = () => {
       let parsedValue = value;
       if (name === "cpu") {
         parsedValue = { id: value };
-      } else if (name === "screenSize" || name === "discountPercent") {
+      } else if (name === "screenSize" || name === "discountPercent" || name === "price" || name === "ramMemory" || name === "diskCapacity" || name === "warranty") {
+         // Chuyển về số nếu input không rỗng
         parsedValue = value === "" ? "" : parseFloat(value);
       }
       return {
         ...prevState,
-        [name]: parsedValue || "",
+        [name]: parsedValue,
       };
     });
   };
@@ -187,6 +194,7 @@ const CreateLaptopForm = () => {
     }));
   };
 
+  // Logic xử lý Laptop Colors
   const handleLaptopColorChange = (index, field, value) => {
     const updatedColors = [...laptopData.laptopColors];
     updatedColors[index][field] = value;
@@ -220,7 +228,7 @@ const CreateLaptopForm = () => {
       ...prevState,
       laptopColors: updatedColors,
     }));
-
+    // Recalculate available colors
     const selectedColorIds = updatedColors.map((color) => color.colorId);
     const remainingColors = colors.filter(
       (color) => !selectedColorIds.includes(color.id)
@@ -231,7 +239,7 @@ const CreateLaptopForm = () => {
   const handleGpuChange = (event) => {
     const selectedGpuIds = event.target.value;
     const updatedGpus = selectedGpuIds.map((id) => ({ id }));
-    if (selectedGpuIds.length > 2) return;
+    if (selectedGpuIds.length > 2) return; // Limit 2 GPU
     setLaptopData((prevState) => ({
       ...prevState,
       gpus: updatedGpus,
@@ -264,10 +272,10 @@ const CreateLaptopForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const val = validateObject(laptopData)
-    if(val!=='done'){
+    const val = validateObject(laptopData);
+    if(val !== 'done'){
       alert(val);
-      return
+      return;
     }
     const res = await dispatch(createLaptop({ data: laptopData }));
     if (res) {
@@ -277,406 +285,411 @@ const CreateLaptopForm = () => {
       });
       await dispatch(uploadFiles(res.id, formData));
       alert("Tạo Laptop thành công!");
+      // Reset form hoặc redirect tùy ý
     } else {
-      alert("Model đã tồn tại, vui lòng chọn tên khác hoặc kiểm tra lại dữ liệu.");
+      alert("Có lỗi xảy ra hoặc Model đã tồn tại.");
     }
   };
 
+  // --- STYLES HELPER ---
+  const cardStyle = { mb: 3, borderRadius: 2, overflow: 'visible', boxShadow: '0px 4px 10px rgba(0,0,0,0.05)' };
+  const headerStyle = { borderBottom: '1px solid #eee', px: 3, py: 2 };
+
   return (
     <Fragment>
-      <Box sx={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
-        <Typography variant="h4" sx={{ textAlign: "center", marginBottom: 4, fontWeight: 'bold', color: '#9155FD' }}>
-          THÊM SẢN PHẨM MỚI
-        </Typography>
+      <Box sx={{ p: { xs: 1, md: 3 }, maxWidth: 1200, mx: "auto" }}>
+        {/* HEADER PAGE */}
+        <Box sx={{ mb: 4, textAlign: 'center' }}>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
+             THÊM SẢN PHẨM MỚI
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Điền đầy đủ thông tin để tạo mới một Laptop trong hệ thống
+          </Typography>
+        </Box>
 
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
-
-            {/* 1. THÔNG TIN CHUNG */}
-            <Grid item xs={12}>
-              <Card elevation={3}>
-                <CardHeader title="1. Thông tin chung" titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
-                <Divider />
-                <CardContent>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <FormControl fullWidth>
-                          <InputLabel>Thương hiệu (Brand)</InputLabel>
-                          <Select
-                            name="brandId"
-                            value={laptopData.brandId}
-                            onChange={(e) => handleChange(e)}
-                            renderValue={(selected) => brands.find((brand) => brand.id === selected)?.name || "Select Brand"}
-                            MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }}
-                            label="Thương hiệu (Brand)"
-                          >
-                            {brands.map((brand) => (
-                              <MenuItem key={brand.id} value={brand.id}>{brand.name}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <Tooltip title="Quản lý Brand">
-                          <IconButton
-                            onClick={() => openManager("Quản lý Thương hiệu", "brands", "name")}
-                            sx={{ border: '1px solid rgba(255, 255, 255, 0.23)' }}
-                          >
-                            <SettingsIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Tên Model (Ví dụ: Nitro 5 AN515)" name="model" value={laptopData.model} onChange={handleChange} />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Giá gốc (VND)" name="price" value={laptopData.price} onChange={handleChange} type="number" />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Phần trăm giảm giá (%)" name="discountPercent" value={laptopData.discountPercent} onChange={handleChange} type="number"
-                        inputProps={{ step: "0.1", min: 0, max: 100 }} />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Xuất xứ" name="origin" value={laptopData.origin} onChange={handleChange} />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Bảo hành (tháng)" name="warranty" value={laptopData.warranty} onChange={handleChange} type="number" />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <FormControl fullWidth>
-                          <InputLabel>Danh mục (Categories)</InputLabel>
-                          <Select
-                            multiple
-                            name="categories"
-                            value={laptopData.categories.map((cat) => cat.id)}
-                            label="Danh mục (Categories)"
-                            onChange={handleCategoryChange}
-                            MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }}
-                            renderValue={(selected) =>
-                              selected.map((id) => categories.find((category) => category.id === id)?.name || "Unknown").join(", ")
-                            }
-                          >
-                            {categories.map((category) => (
-                              <MenuItem key={category.id} value={category.id}>
-                                <Checkbox checked={laptopData.categories.some((cat) => cat.id === category.id)} />
-                                <ListItemText primary={category.name} />
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <Tooltip title="Quản lý Danh mục">
-                          <IconButton
-                            onClick={() => openManager("Quản lý Danh mục", "categories", "name")}
-                            sx={{ border: '1px solid rgba(255, 255, 255, 0.23)' }}
-                          >
-                            <SettingsIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* 2. CẤU HÌNH */}
-            <Grid item xs={12}>
-              <Card elevation={3}>
-                <CardHeader title="2. Cấu hình phần cứng (Specs)" titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
-                <Divider />
-                <CardContent>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        {/* CPU */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <FormControl fullWidth>
-                            <InputLabel>CPU</InputLabel>
-                            <Select
-                              name="cpu"
-                              value={laptopData.cpu?.id || ""}
-                              onChange={handleChange}
-                              renderValue={(selected) => cpus.find((cpu) => cpu.id === selected)?.model || "Select CPU"}
-                              label="CPU"
-                              MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }}
-                            >
-                              {cpus.map((cpu) => (
-                                <MenuItem key={cpu.id} value={cpu.id}>{cpu.model}</MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                          <Tooltip title="Quản lý CPU">
-                            <IconButton
-                              onClick={() => setOpenCpuManager(true)}
-                              sx={{ border: '1px solid rgba(255, 255, 255, 0.23)' }}
-                            >
-                              <SettingsIcon />
+          
+          {/* 1. THÔNG TIN CHUNG */}
+          <Card sx={cardStyle}>
+            <CardHeader 
+              avatar={<Box sx={{ bgcolor: 'primary.light', p: 1, borderRadius: 1, color: 'primary.main' }}><InfoOutlinedIcon/></Box>}
+              title={<Typography variant="h6" fontWeight="bold">Thông tin cơ bản</Typography>}
+              subheader="Tên, thương hiệu, giá bán và phân loại"
+              sx={headerStyle}
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Thương hiệu</InputLabel>
+                    <Select
+                      name="brandId"
+                      value={laptopData.brandId}
+                      onChange={handleChange}
+                      label="Thương hiệu"
+                      endAdornment={
+                        <InputAdornment position="end" sx={{ mr: 2 }}>
+                          <Tooltip title="Quản lý Thương hiệu">
+                            <IconButton size="small" onClick={() => openManager("Quản lý Thương hiệu", "brands", "name")}>
+                              <SettingsSuggestIcon fontSize="small" color="primary" />
                             </IconButton>
                           </Tooltip>
-                        </Box>
-                    </Grid>
+                        </InputAdornment>
+                      }
+                    >
+                      {brands.map((brand) => <MenuItem key={brand.id} value={brand.id}>{brand.name}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-                    <Grid item xs={12} sm={6}>
-                        {/* GPU */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <FormControl fullWidth>
-                            <InputLabel>GPUs (Card đồ họa)</InputLabel>
-                            <Select multiple value={laptopData.gpus.map((gpu) => gpu.id)} onChange={handleGpuChange}
-                              renderValue={(selected) => selected.map((id) => gpus.find((gpu) => gpu.id === id)?.model || "Unknown GPU").join(", ")}
-                              label="GPUs (Card đồ họa)" MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }} >
-                              {gpus.map((gpu) => (
-                                <MenuItem key={gpu.id} value={gpu.id}
-                                  disabled={!laptopData.gpus.some((selectedGpu) => selectedGpu.id === gpu.id) && isGpuTypeSelected(gpu.type, gpu.id)}>
-                                  <Checkbox checked={laptopData.gpus.some((selectedGpu) => selectedGpu.id === gpu.id)} />
-                                  <ListItemText primary={`${gpu.model} (${gpu.type})`} />
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                          <Tooltip title="Quản lý GPU">
-                            <IconButton
-                              onClick={() => setOpenGpuManager(true)}
-                              sx={{ border: '1px solid rgba(255, 255, 255, 0.23)' }}
-                            >
-                              <SettingsIcon />
-                            </IconButton>
+                <Grid item xs={12} md={6}>
+                   <TextField fullWidth label="Tên Model (VD: Dell XPS 13 9310)" name="model" value={laptopData.model} onChange={handleChange} required />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                   <TextField 
+                      fullWidth label="Giá niêm yết (VNĐ)" 
+                      name="price" value={laptopData.price} onChange={handleChange} 
+                      type="number" 
+                      InputProps={{ endAdornment: <InputAdornment position="end">₫</InputAdornment> }} 
+                   />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                   <TextField 
+                      fullWidth label="Giảm giá" 
+                      name="discountPercent" value={laptopData.discountPercent} onChange={handleChange} 
+                      type="number"
+                      InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }} 
+                   />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <TextField 
+                        fullWidth label="Bảo hành" 
+                        name="warranty" value={laptopData.warranty} onChange={handleChange} 
+                        type="number"
+                        InputProps={{ endAdornment: <InputAdornment position="end">Tháng</InputAdornment> }} 
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Xuất xứ" name="origin" value={laptopData.origin} onChange={handleChange} placeholder="VD: Trung Quốc, Việt Nam" />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Danh mục</InputLabel>
+                    <Select
+                      multiple
+                      name="categories"
+                      value={laptopData.categories.map((cat) => cat.id)}
+                      onChange={handleCategoryChange}
+                      label="Danh mục"
+                      renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map((value) => {
+                             const cat = categories.find(c => c.id === value);
+                             return <Chip key={value} label={cat ? cat.name : value} size="small" />
+                          })}
+                        </Box>
+                      )}
+                      endAdornment={
+                        <InputAdornment position="end" sx={{ mr: 2 }}>
+                          <Tooltip title="Quản lý Danh mục">
+                             <IconButton size="small" onClick={() => openManager("Quản lý Danh mục", "categories", "name")}>
+                               <SettingsSuggestIcon fontSize="small" color="primary" />
+                             </IconButton>
                           </Tooltip>
-                        </Box>
-                    </Grid>
+                        </InputAdornment>
+                      }
+                    >
+                      {categories.map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          <Checkbox checked={laptopData.categories.some((cat) => cat.id === category.id)} />
+                          <ListItemText primary={category.name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
 
-                    {/* Memory */}
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Dung lượng RAM (GB)" name="ramMemory" value={laptopData.ramMemory} onChange={handleChange} type="number" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Chi tiết RAM (Loại, Bus...)" name="ramDetail" value={laptopData.ramDetail} onChange={handleChange} />
-                    </Grid>
+          {/* 2. CẤU HÌNH PHẦN CỨNG */}
+          <Card sx={cardStyle}>
+            <CardHeader 
+              avatar={<Box sx={{ bgcolor: 'info.light', p: 1, borderRadius: 1, color: 'info.main' }}><MemoryIcon/></Box>}
+              title={<Typography variant="h6" fontWeight="bold">Thông số kỹ thuật</Typography>}
+              subheader="CPU, GPU, RAM, Ổ cứng và Màn hình"
+              sx={headerStyle}
+            />
+            <Divider />
+            <CardContent sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                {/* CPU & GPU */}
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Bộ vi xử lý (CPU)</InputLabel>
+                    <Select
+                      name="cpu"
+                      value={laptopData.cpu?.id || ""}
+                      onChange={handleChange}
+                      label="Bộ vi xử lý (CPU)"
+                      endAdornment={
+                        <InputAdornment position="end" sx={{ mr: 2 }}>
+                           <Tooltip title="Thêm CPU Mới">
+                              <IconButton size="small" onClick={() => setOpenCpuManager(true)}>
+                                 <SettingsSuggestIcon fontSize="small" color="info" />
+                              </IconButton>
+                           </Tooltip>
+                        </InputAdornment>
+                      }
+                    >
+                      {cpus.map((cpu) => <MenuItem key={cpu.id} value={cpu.id}>{cpu.model}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Card đồ họa (GPU)</InputLabel>
+                    <Select
+                      multiple
+                      value={laptopData.gpus.map((gpu) => gpu.id)}
+                      onChange={handleGpuChange}
+                      label="Card đồ họa (GPU)"
+                      renderValue={(selected) => selected.map(id => gpus.find(g => g.id === id)?.model).join(", ")}
+                      endAdornment={
+                        <InputAdornment position="end" sx={{ mr: 2 }}>
+                           <Tooltip title="Thêm GPU Mới">
+                              <IconButton size="small" onClick={() => setOpenGpuManager(true)}>
+                                 <SettingsSuggestIcon fontSize="small" color="info" />
+                              </IconButton>
+                           </Tooltip>
+                        </InputAdornment>
+                      }
+                    >
+                      {gpus.map((gpu) => (
+                        <MenuItem key={gpu.id} value={gpu.id} disabled={!laptopData.gpus.some(g => g.id === gpu.id) && isGpuTypeSelected(gpu.type, gpu.id)}>
+                          <Checkbox checked={laptopData.gpus.some((selectedGpu) => selectedGpu.id === gpu.id)} />
+                          <ListItemText primary={`${gpu.model} (${gpu.type})`} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Dung lượng ổ cứng (GB)" name="diskCapacity" value={laptopData.diskCapacity} onChange={handleChange} type="number" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Chi tiết ổ cứng (SSD/HDD, NVMe...)" name="diskDetail" value={laptopData.diskDetail} onChange={handleChange} />
-                    </Grid>
+                {/* RAM */}
+                <Grid item xs={12} md={4}>
+                   <TextField fullWidth label="RAM (GB)" name="ramMemory" value={laptopData.ramMemory} onChange={handleChange} type="number" />
+                </Grid>
+                <Grid item xs={12} md={8}>
+                   <TextField fullWidth label="Chi tiết RAM (Loại, Bus...)" name="ramDetail" value={laptopData.ramDetail} onChange={handleChange} placeholder="VD: DDR4 3200MHz" />
+                </Grid>
 
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Kích thước màn hình (inch)" name="screenSize" value={laptopData.screenSize} onChange={handleChange} type="number" inputProps={{ step: "0.1", min: 0 }} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Chi tiết màn hình (Độ phân giải, Tấm nền...)" name="screenDetail" value={laptopData.screenDetail} onChange={handleChange} />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
+                {/* DISK */}
+                <Grid item xs={12} md={4}>
+                   <TextField fullWidth label="Ổ cứng (GB)" name="diskCapacity" value={laptopData.diskCapacity} onChange={handleChange} type="number" />
+                </Grid>
+                <Grid item xs={12} md={8}>
+                   <TextField fullWidth label="Chi tiết ổ cứng" name="diskDetail" value={laptopData.diskDetail} onChange={handleChange} placeholder="VD: SSD NVMe PCIe" />
+                </Grid>
 
-            {/* 3. THIẾT KẾ & OS */}
-            <Grid item xs={12}>
-              <Card elevation={3}>
-                <CardHeader title="3. Thiết kế & Phần mềm" titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
-                <Divider />
-                <CardContent>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <FormControl fullWidth>
-                          <InputLabel>Hệ điều hành (OS)</InputLabel>
-                          <Select
-                            name="osVersionId"
-                            value={laptopData.osVersionId || ""}
-                            onChange={(e) => handleChange(e)}
-                            renderValue={(selected) => osVersions.find((os) => os.id === selected)?.version || "Select OS Version"}
-                            MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }}
-                            label="Hệ điều hành (OS)"
-                          >
-                            {osVersions.map((os) => (
-                              <MenuItem key={os.id} value={os.id}>{os.version}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <Tooltip title="Quản lý OS">
-                          <IconButton
-                            onClick={() => openManager("Quản lý Hệ điều hành", "osversions", "version")}
-                            sx={{ border: '1px solid rgba(255, 255, 255, 0.23)' }}
-                          >
-                            <SettingsIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </Grid>
+                {/* SCREEN */}
+                <Grid item xs={12} md={4}>
+                   <TextField fullWidth label="Màn hình (Inch)" name="screenSize" value={laptopData.screenSize} onChange={handleChange} type="number" inputProps={{ step: "0.1" }} />
+                </Grid>
+                <Grid item xs={12} md={8}>
+                   <TextField fullWidth label="Chi tiết màn hình" name="screenDetail" value={laptopData.screenDetail} onChange={handleChange} placeholder="VD: Full HD, IPS, 144Hz" />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
 
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Kiểu bàn phím" name="keyboardType" value={laptopData.keyboardType} onChange={handleChange} />
-                    </Grid>
+          {/* 3. THIẾT KẾ & PHẦN MỀM */}
+          <Card sx={cardStyle}>
+            <CardHeader 
+              avatar={<Box sx={{ bgcolor: 'warning.light', p: 1, borderRadius: 1, color: 'warning.main' }}><LaptopMacIcon/></Box>}
+              title={<Typography variant="h6" fontWeight="bold">Thiết kế & Phần mềm</Typography>}
+              sx={headerStyle}
+            />
+            <Divider />
+            <CardContent sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                 <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Hệ điều hành (OS)</InputLabel>
+                    <Select
+                      name="osVersionId"
+                      value={laptopData.osVersionId || ""}
+                      onChange={handleChange}
+                      label="Hệ điều hành (OS)"
+                      endAdornment={
+                        <InputAdornment position="end" sx={{ mr: 2 }}>
+                           <IconButton size="small" onClick={() => openManager("Quản lý OS", "osversions", "version")}>
+                              <SettingsSuggestIcon fontSize="small" color="warning" />
+                           </IconButton>
+                        </InputAdornment>
+                      }
+                    >
+                      {osVersions.map((os) => <MenuItem key={os.id} value={os.id}>{os.version}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                   <TextField fullWidth label="Kiểu bàn phím" name="keyboardType" value={laptopData.keyboardType} onChange={handleChange} />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                   <TextField fullWidth label="Pin & Sạc" name="batteryCharger" value={laptopData.batteryCharger} onChange={handleChange} />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                   <TextField fullWidth label="Thiết kế" name="design" value={laptopData.design} onChange={handleChange} placeholder="VD: Vỏ kim loại, 1.3kg" />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
 
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Pin & Sạc" name="batteryCharger" value={laptopData.batteryCharger} onChange={handleChange} />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Thiết kế (Vỏ, trọng lượng...)" name="design" value={laptopData.design} onChange={handleChange} />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* 4. MÀU SẮC */}
-            <Grid item xs={12}>
-                <Card elevation={3} sx={{ border: '1px solid #9155FD' }}> 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Typography variant="h6" color="primary">4. Phiên bản màu sắc & Kho hàng</Typography>
-                    <Tooltip title="Quản lý danh sách Màu">
-                      <IconButton
-                        size="small"
-                        onClick={() => openManager("Quản lý Màu sắc", "colors", "name")}
-                        sx={{ bgcolor: 'rgba(145, 85, 253, 0.1)', color: '#9155FD' }}
-                      >
-                        <SettingsIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                  <Button variant="outlined" startIcon={<AddIcon/>} onClick={addLaptopColorRow}>
-                    Thêm màu khác
-                  </Button>
+          {/* 4. MÀU SẮC & KHO HÀNG */}
+          <Card sx={cardStyle}>
+             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, borderBottom: '1px solid #eee' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                   <Box sx={{ bgcolor: 'success.light', p: 1, borderRadius: 1, color: 'success.main' }}><PaletteOutlinedIcon/></Box>
+                   <Box>
+                      <Typography variant="h6" fontWeight="bold">Phiên bản màu sắc & Kho</Typography>
+                      <Typography variant="caption" color="text.secondary">Quản lý số lượng tồn kho theo từng màu</Typography>
+                   </Box>
                 </Box>
-                <Divider />
-                <CardContent>
-                  {laptopData.laptopColors.map((laptopColor, index) => (
-                    <Box key={index} sx={{
-                      marginBottom: 2,
-                      padding: 2,
-                      borderRadius: 1,
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px dashed rgba(255,255,255,0.2)'
-                    }}>
+                <Button variant="contained" size="small" startIcon={<AddCircleOutlineIcon />} onClick={addLaptopColorRow}>
+                  Thêm màu
+                </Button>
+             </Box>
+             
+             <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                   <Tooltip title="Quản lý danh sách màu hệ thống">
+                      <Button size="small" variant="text" startIcon={<SettingsSuggestIcon />} onClick={() => openManager("Quản lý Màu sắc", "colors", "name")}>
+                         Cài đặt màu
+                      </Button>
+                   </Tooltip>
+                </Box>
+
+                {laptopData.laptopColors.map((laptopColor, index) => (
+                   <Paper key={index} elevation={0} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
                       <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} md={5}>
-                          <FormControl fullWidth>
-                            <InputLabel>Màu sắc</InputLabel>
-                            <Select value={laptopColor.colorId} label="Màu sắc"
-                              onChange={(e) => handleLaptopColorChange(index, "colorId", e.target.value)}
-                              renderValue={(selected) => colors.find((color) => color.id === selected)?.name || ""}
-                            >
-                              {availableColors.map((color) => (
-                                <MenuItem key={color.id} value={color.id}> {color.name} </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} md={5}>
-                          <TextField fullWidth label="Số lượng trong kho" type="number" value={laptopColor.quantity}
-                            onChange={(e) => handleLaptopColorChange(index, "quantity", e.target.value)}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                          {index > 0 ? (
-                            <Button
-                              color="error"
-                              variant="outlined"
-                              onClick={() => removeLaptopColorRow(index)}
-                              startIcon={<RemoveIcon />}
-                            >
-                              Xóa dòng
-                            </Button>
-                          ) : (
-                            <Typography variant="caption" sx={{color: 'gray'}}>Màu mặc định</Typography>
-                          )}
-                        </Grid>
+                         <Grid item xs={12} sm={5}>
+                            <FormControl fullWidth size="small">
+                               <InputLabel>Màu sắc</InputLabel>
+                               <Select 
+                                  value={laptopColor.colorId} 
+                                  label="Màu sắc"
+                                  onChange={(e) => handleLaptopColorChange(index, "colorId", e.target.value)}
+                               >
+                                  {availableColors.map((c) => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
+                               </Select>
+                            </FormControl>
+                         </Grid>
+                         <Grid item xs={12} sm={5}>
+                             <TextField 
+                                fullWidth size="small" 
+                                label="Số lượng tồn kho" 
+                                type="number" 
+                                value={laptopColor.quantity}
+                                onChange={(e) => handleLaptopColorChange(index, "quantity", e.target.value)}
+                             />
+                         </Grid>
+                         <Grid item xs={12} sm={2} sx={{ textAlign: 'center' }}>
+                            <Tooltip title="Xóa dòng này">
+                               <IconButton color="error" onClick={() => removeLaptopColorRow(index)} disabled={index === 0}>
+                                  <DeleteOutlineIcon />
+                               </IconButton>
+                            </Tooltip>
+                         </Grid>
                       </Grid>
-                    </Box>
-                  ))}
-                </CardContent>
-              </Card>
-            </Grid>
+                   </Paper>
+                ))}
+             </CardContent>
+          </Card>
 
-            {/* 5. ẢNH */}
-            <Grid item xs={12}>
-              <Card elevation={3}>
-                <CardHeader title="5. Hình ảnh sản phẩm" titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
-                <Divider />
-                <CardContent>
-                  <Box
-                    sx={{
-                      border: "2px dashed rgba(255, 255, 255, 0.23)",
-                      borderRadius: "8px",
-                      padding: "20px",
-                      textAlign: "center",
-                      cursor: "pointer",
-                      "&:hover": { borderColor: "#9155FD", backgroundColor: "rgba(145, 85, 253, 0.05)" },
-                      transition: "all 0.3s"
-                    }}
-                  >
-                    <Button variant="contained" component="label" startIcon={<AddIcon />}>
-                      Chọn ảnh từ máy tính
-                      <input type="file" hidden multiple onChange={handleFileChange} />
-                    </Button>
-                    <Typography sx={{ mt: 2, fontStyle: 'italic', opacity: 0.7 }}>
-                      {files.length > 0 ? `Đã chọn ${files.length} tệp` : "Chưa có tệp nào được chọn. (Nên chọn ảnh tỉ lệ 16:9 hoặc vuông)"}
-                    </Typography>
-                  </Box>
+          {/* 5. HÌNH ẢNH */}
+          <Card sx={cardStyle}>
+             <CardHeader 
+                avatar={<Box sx={{ bgcolor: 'error.light', p: 1, borderRadius: 1, color: 'error.main' }}><PhotoLibraryIcon/></Box>}
+                title={<Typography variant="h6" fontWeight="bold">Hình ảnh sản phẩm</Typography>}
+                sx={headerStyle}
+             />
+             <CardContent sx={{ p: 3 }}>
+                <Box 
+                   component="label"
+                   sx={{ 
+                      border: '2px dashed', 
+                      borderColor: 'primary.main', 
+                      borderRadius: 2, 
+                      bgcolor: 'primary.50',
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      p: 4, 
+                      cursor: 'pointer',
+                      transition: '0.3s',
+                      '&:hover': { bgcolor: 'primary.100' }
+                   }}
+                >
+                   <AddPhotoAlternateIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+                   <Typography variant="h6" color="primary">Nhấn để tải ảnh lên</Typography>
+                   <Typography variant="body2" color="text.secondary">Hỗ trợ JPG, PNG. Khuyên dùng tỉ lệ 16:9</Typography>
+                   <input type="file" hidden multiple onChange={handleFileChange} accept="image/*" />
+                </Box>
 
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "15px", marginTop: "20px" }}>
-                    {files.map((file, index) => (
-                      <div key={index} style={{ position: "relative", display: "inline-block", border: '1px solid #ccc', borderRadius: '4px', overflow: 'hidden' }}>
-                        <img
-                          src={URL.createObjectURL(file)}
-                          alt="preview"
-                          style={{ width: "120px", height: "120px", objectFit: "contain", display: "block" }}
-                        />
-                        <IconButton
-                          size="small"
-                          style={{ position: "absolute", top: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.5)', color: 'white' }}
-                          onClick={() => removeFile(index)}
-                        >
-                          <CloseIcon fontSize="small" />
-                        </IconButton>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </Grid>
+                {/* Preview Images */}
+                {files.length > 0 && (
+                   <Grid container spacing={2} sx={{ mt: 2 }}>
+                      {files.map((file, index) => (
+                         <Grid item key={index}>
+                            <Box sx={{ position: 'relative', width: 120, height: 120, borderRadius: 2, overflow: 'hidden', border: '1px solid #ddd' }}>
+                               <img src={URL.createObjectURL(file)} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                               <IconButton 
+                                  size="small" 
+                                  sx={{ position: 'absolute', top: 2, right: 2, bgcolor: 'rgba(0,0,0,0.6)', color: 'white', '&:hover':{ bgcolor: 'error.main' } }}
+                                  onClick={() => removeFile(index)}
+                               >
+                                  <CloseIcon fontSize="small"/>
+                               </IconButton>
+                            </Box>
+                         </Grid>
+                      ))}
+                   </Grid>
+                )}
+             </CardContent>
+          </Card>
 
-            {/* BUTTON SUBMIT */}
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                fullWidth
-                type="submit"
+          {/* ACTION BUTTONS */}
+          <Box sx={{ position: 'sticky', bottom: 20, zIndex: 10, display: 'flex', justifyContent: 'flex-end' }}>
+             <Button 
+                variant="contained" 
+                size="large" 
+                type="submit" 
+                startIcon={loading ? null : <SaveIcon />}
                 disabled={loading}
-                sx={{
-                  padding: "15px",
-                  fontSize: "1.2rem",
-                  fontWeight: "bold",
-                  boxShadow: "0px 4px 20px rgba(145, 85, 253, 0.4)"
+                sx={{ 
+                   py: 1.5, px: 4, 
+                   borderRadius: 8, 
+                   fontWeight: 'bold', 
+                   boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                   textTransform: 'none',
+                   fontSize: '1.1rem'
                 }}
-              >
-                {loading ? "Đang xử lý..." : "LƯU SẢN PHẨM"}
-              </Button>
-            </Grid>
-          </Grid>
+             >
+                {loading ? "Đang xử lý..." : "Lưu Sản Phẩm"}
+             </Button>
+          </Box>
+
         </form>
 
-        {/* DIALOG MANAGER */}
-        <Dialog
-          open={managerConfig.open}
-          onClose={closeManager}
-          fullWidth
-          maxWidth="sm"
-        >
-          <DialogTitle sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>{managerConfig.title}</DialogTitle>
+        {/* --- DIALOGS --- */}
+        <Dialog open={managerConfig.open} onClose={closeManager} fullWidth maxWidth="sm">
+          <DialogTitle sx={{ borderBottom: '1px solid #eee' }}>{managerConfig.title}</DialogTitle>
           {managerConfig.open && (
               <QuickAttributeManager
                   endpoint={managerConfig.endpoint}
@@ -687,7 +700,6 @@ const CreateLaptopForm = () => {
           )}
         </Dialog>
 
-        {/* CPU/GPU Manager */}
         <Dialog open={openCpuManager} onClose={() => setOpenCpuManager(false)} fullWidth maxWidth="lg">
             <QuickCpuManager onClose={() => setOpenCpuManager(false)} onDataChange={handleDataChange} />
         </Dialog>
@@ -696,9 +708,6 @@ const CreateLaptopForm = () => {
             <QuickGpuManager onClose={() => setOpenGpuManager(false)} onDataChange={handleDataChange} />
         </Dialog>
 
-        {error && (
-          <Typography variant="h6" style={{ color: "red", marginTop: "20px", textAlign: 'center' }}> {error} </Typography>
-        )}
       </Box>
     </Fragment>
   );
