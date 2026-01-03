@@ -7,10 +7,7 @@ import {
 import api from "../../Config/api";
 
 export const fetchCarouselImages = () => async (dispatch) => {
-    dispatch({ type: FETCH_IMAGE_CAROUSEL_REQUEST });
-    try {
-        const response = await api.get("/home/slideimage");
-        dispatch({
+    disp
             type: FETCH_IMAGE_CAROUSEL_SUCCESS,
             payload: response.data,
         });

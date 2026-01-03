@@ -6,13 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllPosts } from '../Redux/Post/Action';
 
 const BlogPage = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { post } = useSelector(store => store);
-
-  useEffect(() => {
-    dispatch(getAllPosts());
-  }, [dispatch]);
+  confirm
 
   return (
     <div className="bg-gray-50 min-h-screen py-10">
@@ -43,7 +37,11 @@ const BlogPage = () => {
                 <CircularProgress />
              </Box>
         ) : (
-            <Grid container spacing={4}>
+            <Grid 
+             <Box mb={6} textAlign="center">
+          <Typography variant="h3" component="h1" fontWeight="bold" gutterBottom>
+            Blog & Tin Tức
+          </Typography>container spacing={4}>
             {post.posts && post.posts.length > 0 ? (
                 post.posts.map((blog) => (
                     <Grid item key={blog.id} xs={12} sm={6} md={4} lg={3}>
@@ -59,6 +57,10 @@ const BlogPage = () => {
             )}
             </Grid>
         )}
+         <Box mb={6} textAlign="center">
+          <Typography variant="h3" component="h1" fontWeight="bold" gutterBottom>
+            Blog & Tin Tức
+          </Typography>
       </Container>
     </div>
   );
